@@ -9,3 +9,6 @@ dist/
 *.sqlite3
 .vite/
 dist2/
+.opencode/
+ANALYSIS.txt
+fon.jpg
