@@ -31,7 +31,8 @@ const Catalog = ({
   wishlist,
   selectedArtistSlug,
   setSelectedArtistSlug,
-  onViewProduct
+  onViewProduct,
+  loading
 }) => {
   const [filterCondition, setFilterCondition] = useState('all');
   const [sortBy, setSortBy] = useState('default');
@@ -93,14 +94,29 @@ const Catalog = ({
 
   return (
     <div className="font-ui text-slate-300 animate-section animate-section-1">
-      {!selectedArtistSlug ? (
+      {!selectedArtistSlug ? (loading ? (
         <div>
-          <div className="flex flex-col items-center mb-10 text-center">
-            <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-wider section-title mb-2 animate-rise">
-              Выбери артиста
+          <div className="flex flex-col items-center mb-4 text-center">
+            <div className="skeleton-text" style={{ width: 100, height: 20, margin: '0 auto 4px' }} />
+            <div className="skeleton-text" style={{ width: 200, height: 12, margin: '0 auto' }} />
+          </div>
+          <div className="max-w-md mx-auto mb-4 px-4">
+            <div className="skeleton" style={{ height: 32, width: '100%', borderRadius: 8 }} />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-w-5xl mx-auto px-4">
+            {[1,2,3,4,5,6,7,8].map(i => (
+              <div key={i} className="skeleton-card" style={{ height: 140 }} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="flex flex-col items-center mb-4 text-center">
+            <h2 className="text-lg md:text-xl font-bold uppercase tracking-wider section-title mb-0.5 animate-rise">
+              Артисты
             </h2>
-            <p className="text-base md:text-lg text-amber-400/70 font-accent max-w-xl">
-              Нажми на карточку артиста, чтобы открыть коллекцию мерча
+            <p className="text-xs text-amber-400/70 font-accent max-w-xl">
+              Нажми на карточку, чтобы открыть коллекцию мерча
             </p>
           </div>
 
@@ -188,7 +204,7 @@ const Catalog = ({
           </div>
           )}
         </div>
-      ) : (
+      )) : (
         <div>
           <div className="sticker sticker-cyan aspect-auto h-auto p-4 mb-8">
             <div className="flex flex-wrap items-center gap-3">

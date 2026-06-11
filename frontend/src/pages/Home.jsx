@@ -12,9 +12,40 @@ import {
 } from '../components/CustomSvg';
 import artistIcons from '../components/ArtistIcons';
 
-const Home = ({ artists, items, addToCart, addToWishlist, wishlist, setActiveTab, setSelectedArtistSlug, onViewProduct }) => {
+const Home = ({ artists, items, addToCart, addToWishlist, wishlist, setActiveTab, setSelectedArtistSlug, onViewProduct, loading }) => {
 
   const featuredItems = items.slice(0, 6);
+
+  if (loading) {
+    return (
+      <div className="font-ui text-slate-300">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          {[1,2,3].map(i => <div key={i} className="skeleton-banner" style={{ height: '160px' }} />)}
+        </div>
+        <div className="flex items-center gap-2 mb-5"><div className="skeleton-text" style={{ width: 80, height: 12 }} /></div>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="skeleton-text" style={{ width: 120, height: 16 }} />
+            <div className="skeleton-text" style={{ width: 80, height: 12 }} />
+          </div>
+          <div className="product-grid">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className="skeleton-card" style={{ height: 280 }} />
+            ))}
+          </div>
+        </div>
+        <div className="mb-8">
+          <div className="skeleton-text" style={{ width: 140, height: 16, marginBottom: 16 }} />
+          <div className="brand-grid">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className="skeleton-card" style={{ height: 100 }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   const banners = [
     {

@@ -40,6 +40,7 @@ const ProductDetail = ({
   addToWishlist,
   wishlist,
   setSelectedArtistSlug,
+  loading,
 }) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -57,6 +58,30 @@ const ProductDetail = ({
       .filter((item) => item.artist.id === product.artist.id && item.id !== product.id)
       .slice(0, 4);
   }, [items, product]);
+
+  // ---------- loading skeleton ----------
+  if (loading) {
+    return (
+      <div className="font-ui text-slate-300 animate-section animate-section-1">
+        <div className="mb-4"><div className="skeleton" style={{ width: 80, height: 28, borderRadius: 8 }} /></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+          <div className="skeleton-card" style={{ height: 320 }} />
+          <div className="flex flex-col gap-3">
+            <div className="skeleton-text" style={{ width: 120, height: 16 }} />
+            <div className="skeleton-text" style={{ width: 200, height: 24 }} />
+            <div className="skeleton-text" style={{ width: 140, height: 14 }} />
+            <div className="skeleton-text" style={{ width: 100, height: 28 }} />
+            <div className="skeleton-text" style={{ width: 160, height: 14 }} />
+            <div className="skeleton" style={{ width: '100%', height: 80, marginTop: 8 }} />
+            <div className="flex gap-2 mt-2">
+              <div className="skeleton" style={{ width: 120, height: 36, borderRadius: 8 }} />
+              <div className="skeleton" style={{ width: 120, height: 36, borderRadius: 8 }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ---------- guard: no product ----------
   if (!product) {

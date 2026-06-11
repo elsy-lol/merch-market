@@ -2,6 +2,49 @@
    PREMIUM DARK DESIGN SYSTEM
    ============================================ */
 
+/* ------------------------------------------------------------------ */
+/*  Skeleton / Loading placeholders                                   */
+/* ------------------------------------------------------------------ */
+@keyframes skeleton-pulse {
+  0%   { opacity: 0.3; }
+  50%  { opacity: 0.15; }
+  100% { opacity: 0.3; }
+}
+
+.skeleton {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+  display: inline-block;
+}
+
+.skeleton-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-text {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-banner {
+  height: 160px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
 :root {
   --font-display: 'Unbounded', 'Montserrat', sans-serif;
   --font-ui: 'Inter', 'Montserrat', sans-serif;

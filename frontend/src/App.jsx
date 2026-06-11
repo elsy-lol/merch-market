@@ -25,6 +25,7 @@ const AppContent = () => {
   // Django fetched data state
   const [artists, setArtists] = useState([]);
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Shopping Cart & Wishlist states with LocalStorage persistence
   const [cart, setCart] = useState(() => {
@@ -40,6 +41,7 @@ const AppContent = () => {
   // Fetch data from Django Backend on mount
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         // Fetch Artists
         const artistRes = await fetch('http://127.0.0.1:8000/api/artists/');
@@ -52,6 +54,7 @@ const AppContent = () => {
         if (!merchRes.ok) throw new Error('Failed to fetch merch');
         const merchData = await merchRes.json();
         setItems(merchData.items);
+        setLoading(false);
       } catch (err) {
         console.warn('Backend API connection failed, using fallback mock data.', err);
         // Fallback mock data — все 10 артистов из БД
@@ -171,6 +174,7 @@ const AppContent = () => {
 
         setArtists(mockArtists);
         setItems(mockItems);
+        setLoading(false);
       }
     };
     fetchData();
@@ -267,6 +271,7 @@ const AppContent = () => {
               setActiveTab={handleNavigate}
               setSelectedArtistSlug={setSelectedArtistSlug}
               onViewProduct={onViewProduct}
+              loading={loading}
             />
           } />
           <Route path="/home" element={
@@ -279,6 +284,7 @@ const AppContent = () => {
               setActiveTab={handleNavigate}
               setSelectedArtistSlug={setSelectedArtistSlug}
               onViewProduct={onViewProduct}
+              loading={loading}
             />
           } />
           <Route path="/catalog" element={
@@ -291,6 +297,7 @@ const AppContent = () => {
               selectedArtistSlug={selectedArtistSlug}
               setSelectedArtistSlug={setSelectedArtistSlug}
               onViewProduct={onViewProduct}
+              loading={loading}
             />
           } />
           <Route path="/about" element={<About />} />
@@ -322,6 +329,7 @@ const AppContent = () => {
               addToWishlist={addToWishlist}
               wishlist={wishlist}
               setSelectedArtistSlug={setSelectedArtistSlug}
+              loading={loading}
             />
           } />
           <Route path="*" element={<Navigate to="/" replace />} />
