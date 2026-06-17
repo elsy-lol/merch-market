@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:5173', 'http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5174', 'http://localhost:5174']
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -99,15 +99,8 @@ SIMPLE_JWT = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'merchmarket_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Mars2020',
-        'HOST': 'localhost',
-        'PORT': 5432,
-        'OPTIONS': {
-            'client_encoding': 'UTF8',
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

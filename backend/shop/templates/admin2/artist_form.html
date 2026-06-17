@@ -1,0 +1,36 @@
+{% extends 'admin2/base.html' %}
+{% block title %}{% if artist %}Редактировать{% else %}Добавить{% endif %} артиста{% endblock %}
+{% block content %}
+<h1>{% if artist %}✏️ {{ artist.name }}{% else %}🎤 Новый артист{% endif %}</h1>
+<form method="post" class="form-card">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group">
+      <label>Имя *</label>
+      <input name="name" value="{{ artist.name|default:'' }}" required>
+    </div>
+    <div class="form-group">
+      <label>Slug *</label>
+      <input name="slug" value="{{ artist.slug|default:'' }}" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Описание</label>
+    <textarea name="description" rows="4">{{ artist.description|default:'' }}</textarea>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Логотип (путь)</label>
+      <input name="logo" value="{{ artist.logo|default:'default.png' }}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Social Links (JSON)</label>
+    <textarea name="social_links" rows="4">{{ social_links|default:'{}' }}</textarea>
+  </div>
+  <div class="flex gap-2">
+    <button type="submit" class="btn btn-gold">💾 Сохранить</button>
+    <a href="{% url 'admin-artist-list' %}" class="btn btn-ghost">Отмена</a>
+  </div>
+</form>
+{% endblock %}

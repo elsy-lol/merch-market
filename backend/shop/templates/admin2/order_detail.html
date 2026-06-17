@@ -1,0 +1,53 @@
+{% extends 'admin2/base.html' %}
+{% block title %}Заказ #{{ order.id }}{% endblock %}
+{% block content %}
+<div class="flex items-center gap-2 mb-4">
+  <a href="{% url 'admin-order-list' %}" class="btn btn-ghost btn-sm">← Назад</a>
+</div>
+<h1>🛒 Заказ #{{ order.id }}</h1>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div class="form-card">
+    <h2 style="font-size:16px;font-weight:600;margin-bottom:16px;">📋 Информация</h2>
+    <table>
+      <tr><td class="text-muted" style="padding:4px 0;">Пользователь:</td><td style="padding:4px 0;">{{ order.user_id }}</td></tr>
+      <tr><td class="text-muted" style="padding:4px 0;">Дата:</td><td style="padding:4px 0;">{{ order.created_at|date:"d.m.Y H:i" }}</td></tr>
+      <tr><td class="text-muted" style="padding:4px 0;">Сумма:</td><td style="padding:4px 0;font-weight:700;color:var(--gold);">{{ order.total|floatformat:0 }} ₽</td></tr>
+      {% if user_profile %}
+      <tr><td class="text-muted" style="padding:4px 0;">Имя:</td><td style="padding:4px 0;">{{ user_profile.display_name|default:"—" }}</td></tr>
+      {% endif %}
+      <tr><td class="text-muted" style="padding:4px 0;">Статус:</td>
+        <td style="padding:4px 0;">
+          <form method="post" class="flex gap-2 items-center">
+            {% csrf_token %}
+            <select name="status" style="width:auto;padding:6px 10px;">
+              <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>В обработке</option>
+              <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>В пути</option>
+              <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Доставлен</option>
+              <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Отменён</option>
+            </select>
+            <button type="submit" class="btn btn-gold btn-sm">Обновить</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="form-card">
+    <h2 style="font-size:16px;font-weight:600;margin-bottom:16px;">📦 Товары</h2>
+    <table>
+      <thead><tr><th>Товар</th><th>Цена</th><th>Кол-во</th><th>Сумма</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.price|floatformat:0 }} ₽</td>
+          <td>{{ item.quantity }}</td>
+          <td class="text-gold">{{ item.subtotal|default:item.price|floatformat:0 }} ₽</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

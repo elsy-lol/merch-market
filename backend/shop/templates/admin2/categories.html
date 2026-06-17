@@ -1,0 +1,33 @@
+{% extends 'admin2/base.html' %}
+{% block title %}Категории{% endblock %}
+{% block content %}
+<h1>🏷️ Категории</h1>
+<div class="action-bar">
+  <span class="text-muted">{{ categories|length }} категорий</span>
+  <a href="{% url 'admin-category-add' %}" class="btn btn-gold">+ Добавить категорию</a>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>ID</th><th>Название</th><th>Slug</th><th>Родитель</th><th></th></tr></thead>
+    <tbody>
+      {% for c in categories %}
+      <tr>
+        <td>{{ c.id }}</td>
+        <td><strong>{{ c.name }}</strong></td>
+        <td class="text-muted">{{ c.slug }}</td>
+        <td>{{ c.parent.name|default:"—" }}</td>
+        <td class="text-right">
+          <a href="{% url 'admin-category-edit' c.id %}" class="btn btn-ghost btn-sm">✏️</a>
+          <form method="post" action="{% url 'admin-category-delete' c.id %}" style="display:inline" onsubmit="return confirm('Delete {{ c.name }}?')">
+            {% csrf_token %}
+            <button class="btn btn-danger btn-sm">🗑️</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="empty-state"><div class="big-icon">🏷️</div>Нет категорий</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

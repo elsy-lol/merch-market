@@ -1,0 +1,33 @@
+{% extends 'admin2/base.html' %}
+{% block title %}Заказы{% endblock %}
+{% block content %}
+<h1>🛒 Заказы</h1>
+<div class="action-bar">
+  <div class="flex gap-2 items-center flex-wrap">
+    <a href="{% url 'admin-order-list' %}" class="btn btn-ghost btn-sm {% if not current_status %}btn-gold{% endif %}">Все</a>
+    {% for s in statuses %}
+    <a href="{% url 'admin-order-list' %}?status={{ s }}" class="btn btn-ghost btn-sm {% if current_status == s %}btn-gold{% endif %}">{{ s }}</a>
+    {% endfor %}
+  </div>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Пользователь</th><th>Сумма</th><th>Товаров</th><th>Статус</th><th>Дата</th><th></th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td><a href="{% url 'admin-order-detail' o.id %}">#{{ o.id }}</a></td>
+        <td>{{ o.user_id }}</td>
+        <td class="text-gold">{{ o.total|floatformat:0 }} ₽</td>
+        <td>{{ o.item_count }}</td>
+        <td><span class="badge badge-{{ o.status }}">{{ o.get_status_display|default:o.status }}</span></td>
+        <td class="text-muted">{{ o.created_at|date:"d.m.Y H:i" }}</td>
+        <td><a href="{% url 'admin-order-detail' o.id %}" class="btn btn-ghost btn-sm">Подробнее</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="empty-state"><div class="big-icon">🛒</div>Нет заказов</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

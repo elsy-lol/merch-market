@@ -1,0 +1,68 @@
+{% extends 'admin2/base.html' %}
+{% block title %}Привозы{% endblock %}
+{% block content %}
+<h1>🚚 Привозы (поставки)</h1>
+<div class="action-bar">
+  <span class="text-muted">{{ supplies|length }} поставок</span>
+  <a href="{% url 'admin-supply-add' %}" class="btn btn-gold">+ Новый привоз</a>
+</div>
+
+{% if show_form %}
+<div class="form-card" style="max-width:500px;">
+  <h2 style="font-size:16px;font-weight:600;margin-bottom:16px;">➕ Добавить привоз</h2>
+  <form method="post" action="{% url 'admin-supply-add' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Товар (вариант)</label>
+      <select name="variant_id" required>
+        <option value="">—</option>
+        {% for v in variants %}
+        <option value="{{ v.id }}">{{ v.product.name }} — {{ v.size|default:"One Size" }} ({{ v.stock }} шт.)</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Количество *</label>
+        <input name="quantity" type="number" min="1" required>
+      </div>
+      <div class="form-group">
+        <label>Закупочная цена (₽)</label>
+        <input name="purchase_price" type="number" step="0.01" placeholder="Опционально">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Поставщик</label>
+      <input name="supplier" placeholder="Опционально">
+    </div>
+    <div class="form-group">
+      <label>Заметки</label>
+      <textarea name="notes" rows="3" placeholder="Опционально"></textarea>
+    </div>
+    <button type="submit" class="btn btn-green">✅ Добавить привоз</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>ID</th><th>Товар</th><th>Размер</th><th>+Кол-во</th><th>Поставщик</th><th>Цена закупки</th><th>Дата</th><th>Кто добавил</th></tr></thead>
+    <tbody>
+      {% for s in supplies %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.variant.product.name }}</td>
+        <td class="text-muted">{{ s.variant.size|default:"One Size" }}</td>
+        <td style="color:var(--green);font-weight:700;">+{{ s.quantity }}</td>
+        <td>{{ s.supplier|default:"—" }}</td>
+        <td>{{ s.purchase_price|default:"—" }}</td>
+        <td class="text-muted">{{ s.created_at|date:"d.m.Y H:i" }}</td>
+        <td class="text-muted">{{ s.created_by|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="empty-state"><div class="big-icon">🚚</div>Нет поставок</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

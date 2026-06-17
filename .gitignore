@@ -12,3 +12,17 @@ dist2/
 .opencode/
 ANALYSIS.txt
 fon.jpg
+**/bin/
+**/obj/
+**/build/
+**/.gradle/
+**/local.properties
+*.user
+*.suo
+*.apk
+*.aab
+**/__pycache__/
+Thumbs.db
+.DS_Store
+.vs/
+*.csproj.user

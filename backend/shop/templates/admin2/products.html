@@ -1,0 +1,37 @@
+{% extends 'admin2/base.html' %}
+{% block title %}Товары{% endblock %}
+{% block content %}
+<h1>📦 Товары</h1>
+<div class="action-bar">
+  <span class="text-muted">{{ products|length }} товаров</span>
+  <a href="{% url 'admin-product-add' %}" class="btn btn-gold">+ Добавить товар</a>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>ID</th><th>Название</th><th>Артист</th><th>Цена</th><th>Тип</th><th>Состояние</th><th>Остаток</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td><strong>{{ p.name }}</strong></td>
+        <td>{{ p.creator.name|default:"—" }}</td>
+        <td class="text-gold">{{ p.price|floatformat:0 }} ₽</td>
+        <td class="text-muted">{{ p.product_type }}</td>
+        <td>{{ p.get_condition_display|default:p.condition }}</td>
+        <td>{{ p.total_stock|default:0 }}</td>
+        <td><span class="badge badge-{{ p.status }}">{{ p.get_status_display|default:p.status }}</span></td>
+        <td class="text-right">
+          <a href="{% url 'admin-product-edit' p.id %}" class="btn btn-ghost btn-sm">✏️</a>
+          <form method="post" action="{% url 'admin-product-delete' p.id %}" style="display:inline" onsubmit="return confirm('Delete {{ p.name }}?')">
+            {% csrf_token %}
+            <button class="btn btn-danger btn-sm">🗑️</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" class="empty-state"><div class="big-icon">📦</div>Нет товаров</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

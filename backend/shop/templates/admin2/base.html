@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Admin CP{% endblock %} · Sticker Merch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Unbounded:wght@400;500;600;700;800;900&family=Caveat:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --font-display: 'Unbounded', 'Montserrat', sans-serif;
+  --font-ui: 'Inter', 'Montserrat', sans-serif;
+  --font-accent: 'Caveat', cursive;
+  --font-mono: 'JetBrains Mono', monospace;
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #0d0d1a;
+  --bg-tertiary: #111127;
+  --bg-elevated: rgba(18, 18, 35, 0.85);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+  --bg-card: #12121a;
+  --border: rgba(255,255,255,0.08);
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --gold: #f59e0b;
+  --gold2: #d97706;
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --pink: #ec4899;
+  --rose: #f43f5e;
+  --orange: #f97316;
+  --purple: #a855f7;
+  --sidebar-w: 240px;
+}
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-primary);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+}
+.sidebar-logo h1 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sidebar-logo small {
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  -webkit-text-fill-color: var(--text3);
+}
+.sidebar-nav { padding: 10px 0; flex: 1; }
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+.sidebar-nav a:hover {
+  background: var(--bg-glass-hover);
+  color: var(--text);
+}
+.sidebar-nav a.active {
+  background: rgba(245,158,11,0.08);
+  color: var(--gold);
+  border-left-color: var(--gold);
+}
+.sidebar-nav a.active::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(245,158,11,0.5);
+}
+.sidebar-nav .icon { width: 20px; text-align: center; font-size: 15px; flex-shrink: 0; }
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--font-mono);
+}
+.sidebar-footer a {
+  color: var(--gold);
+  text-decoration: none;
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-ui);
+}
+.sidebar-footer a:hover { text-decoration: underline; }
+/* ===== Main Content ===== */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 28px 36px; max-width: 100%; }
+.main h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+/* ===== Sticker Cards ===== */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--orange), var(--pink));
+  opacity: 0.5;
+}
+.stat-card:hover { border-color: rgba(245,158,11,0.2); }
+.stat-card .value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-card .label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.stat-card .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+/* ===== Tables ===== */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--bg-tertiary);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td { padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+tbody tr:hover { background: var(--bg-glass-hover); }
+tbody tr:last-child td { border-bottom: none; }
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ui);
+  position: relative;
+}
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #0a0a0f;
+  box-shadow: 0 2px 12px rgba(245,158,11,0.2);
+}
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,158,11,0.3); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg-glass-hover); color: var(--text); border-color: rgba(255,255,255,0.15); }
+.btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 8px; }
+.btn-danger { background: var(--rose); color: #fff; }
+.btn-danger:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-green { background: var(--green); color: #000; font-weight: 800; }
+.btn-green:hover { opacity: 0.9; transform: translateY(-1px); }
+/* ===== Forms ===== */
+input, select, textarea {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: var(--text);
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--font-ui);
+}
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(245,158,11,0.4);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
+}
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group { margin-bottom: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  max-width: 720px;
+}
+/* ===== Badges ===== */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-processing { background: rgba(245,158,11,0.12); color: var(--gold); border: 1px solid rgba(245,158,11,0.15); }
+.badge-shipped { background: rgba(6,182,212,0.12); color: var(--cyan); border: 1px solid rgba(6,182,212,0.15); }
+.badge-delivered { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.15); }
+.badge-cancelled { background: rgba(244,67,54,0.12); color: var(--rose); border: 1px solid rgba(244,67,54,0.15); }
+/* ===== Messages ===== */
+.messages { margin-bottom: 20px; }
+.msg {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.msg-success { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); color: var(--green); }
+.msg-error { background: rgba(244,67,54,0.08); border: 1px solid rgba(244,67,54,0.2); color: var(--rose); }
+/* ===== Utilities ===== */
+.text-muted { color: var(--text3); }
+.text-gold { color: var(--gold); }
+.text-right { text-align: right; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-2 { gap: 8px; }
+.gap-4 { gap: 16px; }
+.mb-4 { margin-bottom: 16px; }
+.mt-4 { margin-top: 16px; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text3); }
+.empty-state .big-icon { font-size: 48px; margin-bottom: 12px; }
+a { color: var(--gold); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+/* ===== Animations ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeUp 0.4s ease-out both; }
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.1s; }
+.delay-3 { animation-delay: 0.15s; }
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 56px; }
+  .sidebar-logo h1, .sidebar-logo small, .sidebar-nav a span, .sidebar-footer span { display: none; }
+  .sidebar-nav a { justify-content: center; padding: 12px; }
+  .main { margin-left: 56px; padding: 16px; }
+  .form-row { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr !important; }
+}
+/* ===== Sticker accent colors ===== */
+.sticker-accent { border-left: 3px solid var(--gold); }
+.sticker-accent-cyan { border-left-color: var(--cyan); }
+.sticker-accent-pink { border-left-color: var(--pink); }
+.sticker-accent-green { border-left-color: var(--green); }
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <a href="{% url 'admin-dashboard' %}" class="sidebar-logo">
+    <h1>✦ Sticker CP</h1>
+    <small>Control Panel</small>
+  </a>
+  <nav class="sidebar-nav">
+    <a href="{% url 'admin-dashboard' %}" class="{% if section == 'dashboard' %}active{% endif %}">
+      <span class="icon">📊</span><span>Дашборд</span>
+    </a>
+    <a href="{% url 'admin-artist-list' %}" class="{% if section == 'artists' %}active{% endif %}">
+      <span class="icon">🎤</span><span>Артисты</span>
+    </a>
+    <a href="{% url 'admin-product-list' %}" class="{% if section == 'products' %}active{% endif %}">
+      <span class="icon">📦</span><span>Товары</span>
+    </a>
+    <a href="{% url 'admin-category-list' %}" class="{% if section == 'categories' %}active{% endif %}">
+      <span class="icon">🏷️</span><span>Категории</span>
+    </a>
+    <a href="{% url 'admin-order-list' %}" class="{% if section == 'orders' %}active{% endif %}">
+      <span class="icon">🛒</span><span>Заказы</span>
+    </a>
+    <a href="{% url 'admin-supply-list' %}" class="{% if section == 'supplies' %}active{% endif %}">
+      <span class="icon">🚚</span><span>Привозы</span>
+    </a>
+    <a href="{% url 'admin-user-list' %}" class="{% if section == 'users' %}active{% endif %}">
+      <span class="icon">👥</span><span>Пользователи</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <span>{{ request.user.username }}</span>
+    <a href="/admin/">⚙️ Django Admin</a>
+    <a href="/">🏠 На сайт</a>
+  </div>
+</aside>
+<main class="main">
+  {% if messages %}
+  <div class="messages">
+    {% for msg in messages %}
+    <div class="msg {% if msg.tags == 'success' %}msg-success{% else %}msg-error{% endif %}">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

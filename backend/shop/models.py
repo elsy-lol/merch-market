@@ -124,7 +124,25 @@ class UserProfile(models.Model):
         db_table = 'shop_userprofile'
 
     def __str__(self):
-        return self.display_name or self.user.username
+        return self.display_name or f"User #{self.user_id}"
+
+
+class Supply(models.Model):
+    variant = models.ForeignKey('ProductVariant', on_delete=models.CASCADE, related_name='supplies')
+    quantity = models.IntegerField(help_text='Количество поступивших единиц')
+    supplier = models.CharField(max_length=255, blank=True, help_text='Поставщик')
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text='Закупочная цена')
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=150, blank=True)
+
+    class Meta:
+        db_table = 'shop_supply'
+        verbose_name = 'Привоз'
+        verbose_name_plural = 'Привозы'
+
+    def __str__(self):
+        return f"{self.variant.product.name} +{self.quantity}"
 
 
 class Order(models.Model):

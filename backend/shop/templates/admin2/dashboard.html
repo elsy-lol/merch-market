@@ -1,0 +1,75 @@
+{% extends 'admin2/base.html' %}
+{% block title %}Дашборд{% endblock %}
+{% block content %}
+<h1>📊 Дашборд</h1>
+
+<div class="stats-grid">
+  <div class="stat-card animate-in delay-1">
+    <span class="icon">🎤</span>
+    <div class="value">{{ total_artists }}</div>
+    <div class="label">Артистов</div>
+  </div>
+  <div class="stat-card animate-in delay-2">
+    <span class="icon">📦</span>
+    <div class="value">{{ total_products }}</div>
+    <div class="label">Товаров</div>
+  </div>
+  <div class="stat-card animate-in delay-3">
+    <span class="icon">🛒</span>
+    <div class="value">{{ total_orders }}</div>
+    <div class="label">Заказов</div>
+  </div>
+  <div class="stat-card animate-in delay-1">
+    <span class="icon">💰</span>
+    <div class="value">{{ total_revenue|floatformat:0 }} ₽</div>
+    <div class="label">Выручка</div>
+  </div>
+  <div class="stat-card animate-in delay-2">
+    <span class="icon">👥</span>
+    <div class="value">{{ total_users }}</div>
+    <div class="label">Пользователей</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="two-col">
+  <div class="animate-in delay-2">
+    <div class="section-title">📋 Последние заказы</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
+        <tbody>
+          {% for o in recent_orders %}
+          <tr>
+            <td><a href="{% url 'admin-order-detail' o.id %}">#{{ o.id }}</a></td>
+            <td class="text-gold">{{ o.total|floatformat:0 }} ₽</td>
+            <td><span class="badge badge-{{ o.status }}">{{ o.get_status_display|default:o.status }}</span></td>
+            <td class="text-muted">{{ o.created_at|date:"d.m.Y H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text3);">Нет заказов</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="animate-in delay-3">
+    <div class="section-title">⚠️ Мало на складе (&lt;5)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Товар</th><th>Размер</th><th>Остаток</th></tr></thead>
+        <tbody>
+          {% for v in low_stock %}
+          <tr>
+            <td>{{ v.product.name }}</td>
+            <td class="text-muted">{{ v.size|default:"One Size" }}</td>
+            <td style="color:var(--rose);font-weight:700;">{{ v.stock }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" style="text-align:center;padding:24px;color:var(--green);">✅ Всё в порядке</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,215 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Player.MainWindow"
+        Title="STREET PLAYER - PRO"
+        Width="1050" Height="680"
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Border CornerRadius="12" BorderThickness="0" Background="Transparent" ClipToBounds="True">
+    <Grid>
+        <Grid ColumnDefinitions="240, *">
+            <!-- Sidebar -->
+            <Panel Grid.Column="0">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.7" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+
+                <StackPanel Margin="30,50,30,30" Spacing="10">
+                    <TextBlock Text="STREET" FontSize="32" FontWeight="Black" Foreground="White"/>
+                    <TextBlock Text="PLAYER" FontSize="16" FontWeight="Bold" Foreground="#3A86FF" Margin="0,0,0,40"/>
+
+                    <TextBlock Text="БИБЛИОТЕКА" FontSize="11" FontWeight="Bold" Foreground="#666" Margin="0,0,0,10"/>
+                    <Button Command="{Binding ScanDrivesCommand}" Content="Сканировать ПК" HorizontalAlignment="Stretch" Padding="15,10" Classes="Menu"/>
+                    <Button Command="{Binding SelectFolderCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Content="Выбрать папку" HorizontalAlignment="Stretch" Padding="15,10" Classes="Menu"/>
+
+                    <TextBlock Text="ПЛЕЙЛИСТ" FontSize="11" FontWeight="Bold" Foreground="#666" Margin="0,30,0,10"/>
+                    <Button Command="{Binding AddFilesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Content="+ Добавить" HorizontalAlignment="Stretch" Padding="15,10" Classes="Menu"/>
+                    <Button Command="{Binding ClearPlaylistCommand}" Content="Очистить" HorizontalAlignment="Stretch" Padding="15,10" Classes="Menu"/>
+
+                    <Separator Margin="0,40" Background="#20FFFFFF"/>
+                    <TextBlock Text="{Binding StatusText}" FontSize="10" Foreground="#444" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Panel>
+
+            <!-- Main Content -->
+            <Grid Grid.Column="1" Background="#0A0A0F" RowDefinitions="Auto, *, 140">
+                <!-- Header -->
+                <Grid Name="HeaderBar" Grid.Row="0" Margin="40,50,40,30" ColumnDefinitions="Auto, *, Auto" Background="Transparent">
+                    <Border Grid.Column="0" Width="80" Height="80" CornerRadius="8" Background="#151525" Margin="0,0,20,0" IsVisible="{Binding HasCoverArt}">
+                        <Image Source="{Binding CurrentCoverArt}" Width="80" Height="80" Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CurrentTrackName}" FontSize="42" FontWeight="Light" Foreground="White" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding CurrentTrackArtist}" FontSize="16" Foreground="#666"/>
+                        <TextBlock Text="{Binding CurrentAlbumText}" FontSize="12" Foreground="#444" IsVisible="{Binding HasAlbumText}"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="2" VerticalAlignment="Top" Width="280" Height="40" Background="#15FFFFFF" CornerRadius="20" BorderBrush="#20FFFFFF" BorderThickness="1">
+                        <Grid ColumnDefinitions="40, *">
+                            <PathIcon Data="{StaticResource IconSearch}" Width="16" Height="16" Opacity="0.5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox Text="{Binding SearchQuery, Mode=TwoWay}" Watermark="Поиск треков..." Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="5,0"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Playlist -->
+                <Border Grid.Row="1" Margin="40,0" Background="#05FFFFFF" CornerRadius="15" BorderBrush="#10FFFFFF" BorderThickness="1">
+                    <ListBox Name="playlistBox" ItemsSource="{Binding Playlist}" SelectedItem="{Binding SelectedPlaylistItem}" Background="Transparent" BorderThickness="0" Margin="10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="40, *, Auto" Height="55">
+                                    <TextBlock Text="{Binding Index}" VerticalAlignment="Center" Foreground="#333" FontWeight="Bold"/>
+                                    <StackPanel Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding Artist}" FontSize="11" Foreground="#666" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <PathIcon Grid.Column="2" Data="{StaticResource IconPlay}" Width="14" Height="14" Foreground="#3A86FF" IsVisible="{Binding IsCurrent}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+
+                <!-- Bottom Controls -->
+                <Border Grid.Row="2" Margin="40,10,40,30" Background="#151520" CornerRadius="20" Padding="30,20">
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <!-- Buttons -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="15">
+                            <Button Command="{Binding PlayPrevCommand}" Width="42" Height="42" Classes="Control">
+                                <PathIcon Data="{StaticResource IconPrev}" Width="14" Height="14"/>
+                            </Button>
+                            <Button Command="{Binding PlayPauseCommand}" Width="60" Height="60" Classes="Control Primary">
+                                <Grid Width="22" Height="22">
+                                    <PathIcon Data="{StaticResource IconPlay}" Width="22" Height="22" IsVisible="{Binding ShowPlayIcon}"/>
+                                    <PathIcon Data="{StaticResource IconPause}" Width="22" Height="22" IsVisible="{Binding ShowPauseIcon}"/>
+                                </Grid>
+                            </Button>
+                            <Button Command="{Binding PlayNextCommand}" Width="42" Height="42" Classes="Control">
+                                <PathIcon Data="{StaticResource IconNext}" Width="14" Height="14"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Seek -->
+                        <StackPanel Grid.Column="1" Margin="40,0" VerticalAlignment="Center">
+                            <Grid Margin="0,0,0,5">
+                                <TextBlock Text="{Binding CurrentTimeText}" FontSize="11" Foreground="#555"/>
+                                <TextBlock Text="{Binding TotalTimeText}" FontSize="11" Foreground="#555" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Slider Name="seekSlider" Value="{Binding SeekValue, Mode=TwoWay}" Maximum="{Binding SeekMaximum}" MinHeight="20" Classes="Mini"/>
+                        </StackPanel>
+
+                        <!-- Volume & Toggles -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
+                            <StackPanel VerticalAlignment="Center" Width="60">
+                                <TextBlock Text="БАС" FontSize="9" HorizontalAlignment="Center" Margin="0,0,0,4" Foreground="#444"/>
+                                <Slider Value="{Binding Bass, Mode=TwoWay}" Maximum="100" MinHeight="20" Classes="Mini"/>
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Center" Width="60">
+                                <TextBlock Text="ВЧ" FontSize="9" HorizontalAlignment="Center" Margin="0,0,0,4" Foreground="#444"/>
+                                <Slider Value="{Binding Treble, Mode=TwoWay}" Maximum="100" MinHeight="20" Classes="Mini"/>
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Center" Width="70">
+                                <TextBlock Text="ГРОМКОСТЬ" FontSize="9" HorizontalAlignment="Center" Margin="0,0,0,4" Foreground="#444"/>
+                                <Slider Value="{Binding Volume, Mode=TwoWay}" Maximum="100" MinHeight="20" Classes="Mini"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <ToggleButton IsChecked="{Binding IsRepeatEnabled, Mode=TwoWay}" Width="36" Height="36" Classes="IconToggle">
+                                    <PathIcon Data="{StaticResource IconRepeat}" Width="14" Height="14"/>
+                                </ToggleButton>
+                                <ToggleButton IsChecked="{Binding IsAutoPlayEnabled, Mode=TwoWay}" Width="36" Height="36" Classes="IconToggle">
+                                    <PathIcon Data="{StaticResource IconAutoPlay}" Width="14" Height="14"/>
+                                </ToggleButton>
+                                <ToggleButton IsChecked="{Binding IsShuffleEnabled, Mode=TwoWay}" Width="36" Height="36" Classes="IconToggle">
+                                    <PathIcon Data="{StaticResource IconShuffle}" Width="14" Height="14"/>
+                                </ToggleButton>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Window Drag Handle -->
+        <Panel Name="MainDragHandle" Height="50" VerticalAlignment="Top" Background="Transparent" IsHitTestVisible="True"/>
+
+        <!-- Loading Overlay -->
+        <Grid IsVisible="{Binding IsLoading}" Background="#F005050A">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+                <TextBlock Text="STREET PLAYER" FontSize="48" FontWeight="Black" Foreground="White" HorizontalAlignment="Center"/>
+                <ProgressBar Value="{Binding LoadingProgress}" Width="300" Height="2" Foreground="#3A86FF" Background="#151525"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+    </Border>
+
+    <Window.Styles>
+        <Style Selector="Button.Menu">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#20FFFFFF"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style Selector="Button.Menu:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#15FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3A86FF"/>
+        </Style>
+
+        <Style Selector="Button.Control">
+            <Setter Property="Background" Value="#202030"/>
+            <Setter Property="CornerRadius" Value="30"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="Button.Primary">
+            <Setter Property="Background" Value="#3A86FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="Button.Primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#503A86FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="ToggleButton.IconToggle">
+            <Setter Property="Background" Value="#1A1A25"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="#666"/>
+        </Style>
+        <Style Selector="ToggleButton.IconToggle:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="#303A86FF"/>
+            <Setter Property="BorderBrush" Value="#3A86FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Slider.Mini">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="#3A86FF"/>
+        </Style>
+        <Style Selector="Slider.Mini /template/ Thumb">
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="Height" Value="10"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="Slider.Mini /template/ RepeatButton#PART_TrackBackground">
+             <Setter Property="Height" Value="3"/>
+        </Style>
+
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#3A86FF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="#203A86FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Styles>
+</Window>
